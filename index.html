@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="myscripts.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+    <title>anjane</title>
+    
+    
+
+</div>
+
+</head>
+<body>
+    
+<div class="container">
+
+<section class="first cpad snap">  
+    <div class="topnav">
+        <img src="topnav.png" alt="">
+    </div>
+
+    <img src="first.png" alt="" class="firstimg">
+    
+    <div class="hero">
+        Leverage the power of<div class="highlight-yellow">Data Analytics</div>to get insights into your data.
+    </div>
+        <a class="hbtn" href="#contact">
+            get in touch
+        </a>    
+</section>
+
+<section class="second cpad snap">
+    <img src="2nd.png" alt="" class="secondimg">
+    <div class="hero">
+        With the help of ETL<span class="highlight-cyan">Data Integration</span>  get an unified view of all your data from different sources in a single place</div>
+</section>
+
+<section class="third yelbg cpad snap">
+    <img src="MOBtools.png" alt="" class="thirdimg">
+    <p class="threetxt">Using the best technolgy available out there
+        in the market to serve your needs</p>
+</section>
+
+<section class="fourth darbg cpad snap">
+    <img src="4th.png" alt="" class="fourthimg">
+    <div class="hero whitebg">
+        Scale your business more <div class="highlight-pur">efficiently</div> by making better decisions and see patterns in your data</div>
+</section>
+
+<section class="fifth cpad snap">
+    <p class="fivetxt">Meet the team
+        behind <div class="underline-yellow">anjane</div>
+    </p>
+
+    <div class="tcard">
+        <img src="1.png" alt="" class="timg">
+        <div class="tcon"><div class="ttitle">Hello</div>Blah Blah Blah</div>
+    </div>
+    <div class="tcard">
+        <img src="2.png" alt="" class="timg">
+        <div class="tcon"><div class="ttitle">Hello</div>Blah Blah Blah</div>
+    </div>
+    <div class="tcard">
+        <img src="3.png" alt="" class="timg">
+        <div class="tcon"><div class="ttitle">Hello</div>Blah Blah Blah</div>
+    </div>
+
+    <p class="fiveetxt">We help you make
+        sense of your data, so that you can make informed decisions.</p>
+
+</section>
+ 
+
+<section class="third cpad snap" id="contact">
+    <div class="yelbg sixty">
+    <img src="6th.png" alt="" class="thirdimg">
+    <p class="hero">Send us a mail
+        regarding your needs and we’ll get back to you </p>
+        <div class="mial">
+        <input type="text" value="mail@anjane.tech" class="mail" disabled id="mailid">
+        <button class="mbtn" onclick="ctc()"><img src="copy.png" alt=""></button>
+        </div>
+    </div>
+    <div class="darbg forty">
+
+        <div class="topnav">
+            <img src="bottomnav.png" alt="">
+        </div>
+        Copyright 2021
+
+
+    </div>    
+</section>
+
+
+
+</div>
+</body>
+
+<script>
+    function ctc() {
+    var copyText = document.getElementById("mailid");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+    alert("Copied the text: " + copyText.value);
+  }
+</script>
+
+</html>
