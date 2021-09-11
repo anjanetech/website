@@ -60,12 +60,14 @@
     margin-bottom: 100px;
 }
 
-.thirdimg{
+#thirdimg{
     margin-top: 25px;
     width: 85vw;
     max-width: 300px;
     margin-bottom: 30px;
 }
+
+
 
 .sixthimg{
     margin-top: 25px;
@@ -365,6 +367,10 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+    }
+
+    .desk3{
+        max-width: 760px;
     }
 
     .hero{
