@@ -6,6 +6,10 @@
     margin-top: 50px;
 }
 
+.topnavpng{
+    width: 15%;
+}
+
 * {
     margin: 0%;
     padding-top: 0%;
@@ -15,6 +19,13 @@
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     
+}
+
+.mobcen{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -394,6 +405,14 @@
         margin-bottom: 50px;
     }
 
+    .mobcen{
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        width: max-content;
+    }
+
     .hero{
         
         align-items: flex-start;
@@ -449,6 +468,12 @@
         margin-bottom: 20px;
         margin-top: 50px;
     }
+
+    
+.topnavpng{
+    width: 15%;
+}
+
     
     * {
         margin: 0%;
@@ -692,6 +717,9 @@
     .mial{
         height: 50px;
         margin-top: 25px;
+        /* display: flex;
+        flex-direction: row;
+        align-items: center; */
         
         
         
@@ -713,7 +741,7 @@
         justify-content: center;
         margin-bottom: 10px;
         text-align: center;
-        
+        width: 267px;
           
     }
     
