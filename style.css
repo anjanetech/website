@@ -680,7 +680,8 @@
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          margin-right: 50px;
+          margin: 25px;
+          max-width: 33%;
 
       }
 
@@ -698,6 +699,12 @@
       .ttitle{
           color: #7000ff;
           text-align: center;
+      }
+
+      .ttext{
+        text-align: center;
+        font-size: 15px;
+        font-style: normal;
       }
     
       .fiveetxt{
