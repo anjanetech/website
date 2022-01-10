@@ -20,6 +20,13 @@
     scroll-behavior: smooth;
     
 }
+@media screen and (min-width: 640px) {
+
+   * {
+       margin-top: "5%";
+   }
+}
+
 
 .mobcen{
     display: flex;
@@ -330,9 +337,6 @@
     height: 50px;
     margin-top: 25px;
     text-align: center;
-
-    
-    
 }
 
 .mail{
@@ -350,8 +354,6 @@
     justify-content: center;
     margin-bottom: 10px;
     text-align: center;
-    
-      
 }
 
 .mbtn{
