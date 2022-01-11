@@ -368,6 +368,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
+    padding-bottom: 35px;
 }
 
 .forty{
@@ -471,7 +472,6 @@
         font-family: 'Poppins', sans-serif;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
-        margin-top: 5%;
     }
 
     .firstimg{
@@ -732,6 +732,7 @@
         align-items: center;
         display: flex;
         flex-direction: column;
+        padding-bottom: 35px;
     }
     
     .forty{
