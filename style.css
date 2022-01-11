@@ -288,6 +288,7 @@
       height: auto;
       margin-right: 25px;
       margin-top: 50px;
+      border-radius: 50px;
   }
 
   .tcard{
@@ -382,7 +383,7 @@
 
 .ttext{
     text-align: center;
-    font-size: 5px;
+    font-size: 8px;
     font-style: normal;
     display: block;
 }
@@ -390,11 +391,19 @@
 .cardrow{
     height: 75vh;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+.tcard{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 25px;
+    width: 60vh;
+    justify-content: stretch;
+}
 @media only screen and (min-width: 600px) {
     .firstcontainer{
         display: flex;
@@ -656,6 +665,7 @@
         align-items: center;
         margin-top: 0;
         margin-right: 0;
+        border-radius: 50px;
     }
 
     .tcard{
