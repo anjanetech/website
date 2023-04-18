@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="/style.css">
+    <style type="text/css">
+
+      table {
+        font: 90%/1.45em "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important;
+      }
+
+      .chart .legend {
+        fill: black;
+        font: 14px sans-serif;
+        text-anchor: start;
+        font-size: 12px;
+      }
+
+      .legend circle {
+        stroke: #ccc;
+      }
+
+      .legend text {
+        fill: #777;
+        font: 10px sans-serif;
+      }
+
+      .chart text {
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+
+      .chart .label {
+        fill: black;
+        font: 14px sans-serif;
+        text-anchor: end;
+      }
+
+      .bar:hover {
+        fill: brown;
+      }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      #states path {
+        fill: #ccc;
+        stroke: #fff;
+      }
+
+      path.arc {
+        pointer-events: none;
+        fill: none;
+        stroke: #000;
+        display: none;
+      }
+
+      path.cell {
+        fill: none;
+        pointer-events: all;
+      }
+
+      .graticule {
+        fill: none;
+        stroke: #777;
+        stroke-width: .001px;
+        stroke-opacity: .5;
+      }
+
+      .land {
+        fill: none;
+        stroke: lightgrey;
+      }
+
+      .state-boundary {
+        fill: none;
+        stroke: lightgrey;
+      }
+
+      #cells.voronoi path.cell {
+        stroke: rgb(107, 64, 64);
+      }
+
+      #cells g:hover path.arc {
+        display: inherit;
+      }
+
+      .axis {  font: 8px sans-serif; }
+      .legend tr{    border-bottom:1px solid grey; }
+      .legend tr:first-child{    border-top:1px solid grey; }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .x.axis path {  display: none; }
+      .legend{
+          margin-bottom:76px;
+          display:inline-block;
+          border-collapse: collapse;
+          border-spacing: 0px;
+      }
+
+      .legend td{
+          padding:4px 5px;
+          vertical-align:bottom;
+      }
+
+      .legendFreq, .legendPerc{
+          align:right;
+          width:50px;
+      }
+    </style>
+    <title>anjane - IPL 2023 Schedule </title>
+  </head>
+  <body>
+    <div class="display">
+      <div class="topnav" style="margin-bottom: 10px;margin-top: 10px;">
+        <a href="/" class="mobcen"><img src="/topnav.png" alt="" class="topnavpng"></a> 
+      </div>
+      <div style="width:100vw !important">
+        <div id="ipl_title" style="position:absolute; top:10% ;left:20%; font-weight:normal ">
+        </div>
+      </div>
+      <div id="mainContent" style="width:100vw !important">
+        <div id="map" style="width: 42vw !important;position:relative; float: left;overflow-x: auto; left:-25px;">
+        </div>
+        <div id="schedule" style="width: 55vw !important;height: 90vh !important; position:relative; float: right; overflow-x: auto; top:20px; margin:15px 15px;">
+          <table id="scheduleDataTable" class="display compact responsive" style="overflow-x: scroll;"></table>
+        </div>
+      </div>      
+    </div>
+    <div class="darbg forty">
+      <div class="bottomnav">
+          <a href="/"><img src="/bottomnav.png" alt=""></a>
+      </div>
+      Copyright 2023
+      <br>
+      <br>
+    </div>
+  </body>
+  <script type="text/javascript">
+    // Map dimensions
+    var w = 1280,
+        h = 800
+        opacityCircle = 0.7,
+        magnifier = 100;
+    
+    var origin = [-98, 38];
+    
+    // Projection setup
+    var projection = d3.geo.albers()
+        .rotate([280, 0])
+        .center([10, 155])
+        .parallels([29.5, 45.5])
+        .scale(1000)
+        .translate([w / 2 - 200, h / 2 - 100])
+        .precision(.1);
+    
+    // flight paths
+    var path = d3.geo.path()
+        .projection(projection);
+    
+    var graticule = d3.geo.graticule()
+        .extent([[-98 - 45, 38 - 45], [-98 + 45, 38 + 45]])
+        .step([5, 5]);
+    
+    // Actual drawing of graticules
+    var svg = d3.select("#map").append("svg")
+        .attr("width", '100%')
+        .attr("height", h);
+    
+    svg.append("path")
+        .datum(graticule)
+        .attr("class", "graticule")
+        .attr("d", path);
+    
+    d3.json("map.json", function(error, us) {
+      if (error) throw error;
+
+      svg.insert("path", ".graticule")
+          .datum(topojson.feature(us, us.objects.india))
+          .attr("class", "land")
+          .attr("d", path)
+    
+      svg.insert("path", ".graticule")
+          // .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a && b && a != b; }))
+          .attr("class", "state-boundary")
+          .attr("d", path);
+    });
+    // Defining locations
+    d3.select(self.frameElement).style("height", h + "px");
+    
+    var states = svg.append("svg:g")
+        .attr("id", "states");
+    
+    var circles = svg.append("svg:g")
+        .attr("id", "circles");
+    
+    var cells = svg.append("svg:g")
+        .attr("id", "cells");
+    
+    d3.csv("./flight_path.csv", function(flights){
+      // assume the 'flights.track' array has already been populated from the CSV file
+      var tracks = [];
+      var teamSchedule = [];
+      var teamScheduleTitles = [];
+      var team_track=[]
+      var index =-1;
+      var position = 0;
+      for (let i = 0; i < flights.length; i++) {
+        // index = flights[i].team;
+        if (i === 0 || (i > 0 && flights[i-1].team !== flights[i].team)){
+          position = 0;
+          index = index + 1;
+        } else {
+          position = position + 1;
+        }
+        if (!tracks[index]) {
+          tracks[index] = [];
+        }
+
+        tracks[index][position] = flights[i].track;
+      }
+
+      team_track=tracks;
+      d3.text("schedule.csv", function(error, rawData) {
+        if (error) throw error;
+        teamSchedule = d3.csv.parseRows(rawData);
+        teamScheduleTitles=[];
+        var visible = true;
+        for (let i=0;i<teamSchedule[0].length;i++){
+          visible = true;
+          if (teamSchedule[0][i].toLowerCase() === 'time') {
+            visible = false;
+          }
+          teamScheduleTitles.push({title : teamSchedule[0][i], className: "no-wrap", visible: visible,});
+        }
+        teamSchedule = teamSchedule.slice(1,)
+        $('#scheduleDataTable').DataTable({
+          data: teamSchedule,
+          columns:teamScheduleTitles,
+          pageLength: 15,
+          scrollX:        true,
+        });
+
+        function teamDraw(team_track, color, venues) {
+          // append a path element to the svg element and set its "d" attribute to the result of the line generator function
+          // create the line generator function
+          var lineGenerator = d3.svg.line()
+            .x(function(d) { return projection([d.longitude, d.latitude])[0]; })
+            .y(function(d) { return projection([d.longitude, d.latitude])[1]; });
+
+          // generate an array of coordinates for each line segment in the track array
+          var lineData = [];
+          for (var i = -3; i < team_track.length-1  ; i++) {
+            var sourceVenue = venues.find(function(d) { return d.iata === team_track[i]; });
+            var targetVenue = venues.find(function(d) { return d.iata === team_track[i + 1]; });
+            lineData.push([sourceVenue, targetVenue]);
+          }
+
+          d3.selectAll('.removable-line').remove();
+          svg.selectAll("path")
+            .data(lineData)
+            .enter()
+            .append("path")
+            .attr("class", "removable-line")
+            .attr("d", function(d) { return lineGenerator(d); })
+            .attr("stroke", color)
+            .attr("stroke-width", 2)
+            .attr("marker-end", "url(#triangle)")
+            .attr("fill", color);
+
+          // svg.selectAll('.removable-line').remove();
+          svg.append("svg:defs").append("svg:marker")
+            .attr("class", "removable-line")
+            .attr("id", "triangle")
+            .attr("refX", 6)
+            .attr("refY", 6)
+            .attr("markerWidth", 15)
+            .attr("markerHeight", 15)
+            .attr("orient", "auto-start-reverse")
+            .append("path")
+            .attr("d", "M 0 0 12 6 0 12 3 6")
+            .style("fill", color)
+        }
+
+        d3.csv("venues.csv",function(data) {
+
+          var venues = data.filter(function(d) {
+            return  true; //team_track.includes(d.iata);
+          });
+    
+          const teams=[];
+          for (let i=0;i<venues.length;i++){
+            if (venues[i].team =='y') 
+            {
+              teams.push(venues[i].name);
+            }
+          }
+          const colors=[];
+          for (let i=0;i<venues.length;i++){
+            if (venues[i].team =='y') 
+            {
+              colors.push(venues[i].color)
+            }
+          }
+
+          var myColor = d3.scale.ordinal().range(colors);
+          // var reasons = teams;
+          var team_length=[]
+          for (i=0;i<teams.length;i++){
+            team_length.push(i)
+          }
+          var circles = svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) { return projection([d.longitude, d.latitude])[0]; })
+            .attr("cy", function(d) { return projection([d.longitude, d.latitude])[1]; })
+            .attr("r", 5)
+            .attr("fill", "steelblue")  
+            
+          var cities = svg.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("x", function(d) { return projection([d.longitude, d.latitude])[0]; })
+            .attr("y", function(d) { return projection([d.longitude, d.latitude])[1]; })
+            .attr("fill", "steelblue")
+            .attr("text-anchor", "start").style("font-size", "15px").style('font-family','Calibri').style('fill', 'black')
+            .text(function (d) {return d.city;})
+            .on("mouseover", function (d, i) {
+              d3.select("#ipl_title").text("")
+                .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
+                .append("p").text(d.name).style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
+              teamDraw(team_track[d], myColor(d), venues);
+              const team_name = teams[d];
+              team_schedule(team_name);
+
+            });
+
+          var cities = svg.selectAll("text")
+            .data(team_length)
+            .enter()
+            .append("text")
+            .attr("x", function(d) { return projection([d.longitude, d.latitude])[0]; })
+            .attr("y", function(d) { return projection([d.longitude, d.latitude])[1]; })
+            .attr("fill", "steelblue")
+            .attr("text-anchor", "start").style("font-size", "15px").style('font-family','Calibri').style('fill', 'black')
+            .text(function (d) {return d.city;})
+            .on("mouseover", function (d, i) {
+              d3.select("#ipl_title").text("")
+                .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
+              teamDraw(team_track[d], myColor(d), venues);
+              const team_name = teams[d];
+              team_schedule(team_name);
+            });
+
+          var legend_color = svg.append("svg")
+                              .attr("class", "legend")
+                              .attr("transform", "translate(" + (w - 450) + "," + (h - 300) + ")")
+                              .selectAll("g")
+                              .data(team_length)
+                              .enter().append("g");
+    
+          legend_color.append("circle")
+              .attr("cy", function (d) { return - 25*(-10-d)+180;  })
+              .attr("cx", function(d) {return 390;})
+              .attr("r", function (d) { return 10; })
+              .attr("fill", function (d) {return myColor(d); })
+              .attr('opacity', opacityCircle);
+    
+          legend_color.append("rect")
+              .attr("y", function (d) { return - 25*(-10-d)+180; })
+              .attr("x", function (d) {return 400;})
+              .attr("width", 250)
+              .attr("height", 20)
+              .attr("fill", "white");
+    
+            
+          legend_color.append("text")
+              .attr("y", function (d) { return - 25*(-10-d)+184; })
+              .attr("x", function (d) {return 410;})
+              .attr("text-anchor", "start").style("font-size", "18px").style('font-family','Calibri')
+              .text(function (d) {return teams[d];})
+              .on("mouseover", function(d, i) 
+              {
+    
+                d3.select("#ipl_title").text("")
+                  .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family','Calibri').style('fill', 'black')
+                  .append("p").text(teams[d]).style("font-size", "20px").style('font-family','Calibri').style('fill', 'black')
+                teamDraw(team_track[d], myColor(d), venues);
+                const team_name = teams[d];
+                team_schedule(team_name);
+              });
+
+              function team_schedule(team_name) {
+    
+                  // filter out rows that match the selected team
+                  const filtered_schedule = teamSchedule.filter(function(row) {
+                    if ((String(row[4]).toLowerCase() === team_name.toLowerCase()) ||(String(row[5]).toLowerCase() === team_name.toLowerCase()))
+                    {
+                        return row
+                    }
+                  });
+
+                  // update the data property of the DataTable with filtered rows
+                  const table = $('#scheduleDataTable').DataTable();
+                  table.clear().draw();
+                  table.rows.add(filtered_schedule).draw();
+              }
+        });
+      });
+    });
+    </script>
+</html>

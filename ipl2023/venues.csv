@@ -1,0 +1,13 @@
+iata,name,color,city,state,country,latitude,longitude,team
+MAA,Chennai Super kings,gold,Chennai,Tamil Nadu,INDIA,13.0825,80.275,y
+LKO,Lucknow Super Giants,blueviolet,Lucknow,Uttar Pradesh,INDIA,26.8467,80.9462,y
+AMD,Gujarat Titans,navy,Ahmedabad,Gujarat,INDIA,23.0225,72.5714,y
+BOM,Mumbai Indians,royalblue,Mumbai,Maharashtra,INDIA,18.9667,72.8333,y
+IXC,Punjab Kings,red,Mohali (Chandigarh),Punjab,INDIA,30.7046,76.7179,y
+DEL,Delhi Capitals,mediumblue,Delhi,Haryana,INDIA,28.7041,77.1025,y
+CCU,Kolkata Knight Riders,indigo,Kolkata,West Bengal,INDIA,22.5411,88.3378,y
+JAI,Rajasthan Royals,deeppink,Jaipur,Rajasthan,INDIA,26.9167,75.8667,y
+HYD,Sunrisers Hyderabad,darkorange,Hyderabad,Andhra Pradesh,INDIA,17.3667,78.4667,y
+BLR,Royal Challengers Bangalore,firebrick,Bangalore,Karnataka,INDIA,12.9699,77.598,y
+DHM,Dharamshala,Black,Dharamshala,Himachal Pradesh,INDIA,32.219,76.3234,n
+GAU,Guwahati,Black,Guwahati,Assam,INDIA,26.1667,91.7667,n
