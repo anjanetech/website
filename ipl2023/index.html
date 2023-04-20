@@ -11,18 +11,15 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="/style.css">
     <style type="text/css">
-
       table {
         font: 90%/1.45em "Helvetica Neue",HelveticaNeue,Helvetica,Arial,sans-serif !important;
       }
-
       .chart .legend {
         fill: black;
         font: 14px sans-serif;
         text-anchor: start;
         font-size: 12px;
       }
-
       .legend circle {
         stroke: #ccc;
       }
@@ -127,33 +124,90 @@
       }
     </style>
     <title>anjane - IPL 2023 Schedule </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      @media only screen and (min-width: 601px) {
+        #map {
+          width: 45%;
+          height: 100%;
+          position: relative;
+          /* overflow-x: scroll; */
+          float: left;
+        }
+  
+        #schedule {
+          width: 55%;
+          height: 90vh;
+          /* min-width: 800px; */
+          overflow-x: auto;
+          position: relative;
+          /* top: 80%; */
+          float: right;
+        }
+      }
+  
+      @media only screen and (max-width: 600px) {
+        #mainContent {
+          display: table;
+          width: 100%;
+        }
+        #map, #schedule {
+          display: table-row;
+          width: 100%;
+        }
+        #map {
+          height: 50vh;
+        }
+        #schedule {
+          height: 50vh;
+          overflow-x: auto;
+        }
+        #header {
+          width: 100% !important;
+        }
+        #footer {
+          width: 100% !important;
+        }
+      }
+
+    </style>
   </head>
+  
   <body>
-    <div class="display">
+    <div id="header">
       <div class="topnav" style="margin-bottom: 10px;margin-top: 10px;">
-        <a href="/" class="mobcen"><img src="/topnav.png" alt="" class="topnavpng"></a> 
+        <a href="/" class="mobcen"><img src="/topnav.png" alt="" class="topnavpng"></a>
       </div>
+      <br>
+      <div style="width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <h1>Indian Premier League - 2023</h1>
+        <h3>Hover over the Team to see the Flight Path and schedule</h3>
+      </div>
+      <br>
+      <br>
       <div style="width:100vw !important">
-        <div id="ipl_title" style="position:absolute; top:10% ;left:20%; font-weight:normal ">
+        <div id="ipl_title" style="position:absolute; left:20%; font-weight:normal ">
         </div>
       </div>
-      <div id="mainContent" style="width:100% !important; min-width: 800px !important; overflow-x: scroll;">
-        <div id="map" style="width: 42% !important;position:relative; float: left;overflow-x: auto; left:-25px;">
-        </div>
-        <div id="schedule" style="width: 55% !important; min-width:800px; height: 90vh !important; position:relative; float: right; overflow-x: auto; top:20px; margin:15px 15px;">
-          <table id="scheduleDataTable" class="display compact responsive" style="overflow-x: scroll;"></table>
-        </div>
-      </div>      
     </div>
-    <div class="darbg forty">
+    <div id="mainContent">
+      
+      <div id="map">
+
+      </div>
+      
+      <div id="schedule">
+        <table id="scheduleDataTable" class="display compact responsive" style="overflow-x: scroll;"></table>
+      </div>
+    </div>
+    <div id="footer" class="darbg forty">
       <div class="bottomnav">
-          <a href="/"><img src="/bottomnav.png" alt=""></a>
+        <a href="/"><img src="/bottomnav.png" alt=""></a>
       </div>
       Copyright 2023
-      <br>
-      <br>
     </div>
   </body>
+  
   <script type="text/javascript">
     // Map dimensions
     var w = 1280,
@@ -166,8 +220,8 @@
     // Projection setup
     var projection = d3.geo.albers()
         .rotate([280, 0])
-        .center([10, 155])
-        .parallels([29.5, 45.5])
+        .center([15, 155])
+        // .parallels([29.5, 45.5])
         .scale(1000)
         .translate([w / 2 - 200, h / 2 - 100])
         .precision(.1);
@@ -224,7 +278,6 @@
       var index =-1;
       var position = 0;
       for (let i = 0; i < flights.length; i++) {
-        // index = flights[i].team;
         if (i === 0 || (i > 0 && flights[i-1].team !== flights[i].team)){
           position = 0;
           index = index + 1;
@@ -234,7 +287,6 @@
         if (!tracks[index]) {
           tracks[index] = [];
         }
-
         tracks[index][position] = flights[i].track;
       }
 
@@ -260,44 +312,46 @@
         });
 
         function teamDraw(team_track, color, venues) {
-          // append a path element to the svg element and set its "d" attribute to the result of the line generator function
-          // create the line generator function
-          var lineGenerator = d3.svg.line()
-            .x(function(d) { return projection([d.longitude, d.latitude])[0]; })
-            .y(function(d) { return projection([d.longitude, d.latitude])[1]; });
+          if (team_track) {
+            // append a path element to the svg element and set its "d" attribute to the result of the line generator function
+            // create the line generator function
+            var lineGenerator = d3.svg.line()
+              .x(function(d) { return projection([d.longitude, d.latitude])[0]; })
+              .y(function(d) { return projection([d.longitude, d.latitude])[1]; });
 
-          // generate an array of coordinates for each line segment in the track array
-          var lineData = [];
-          for (var i = -3; i < team_track.length-1  ; i++) {
-            var sourceVenue = venues.find(function(d) { return d.iata === team_track[i]; });
-            var targetVenue = venues.find(function(d) { return d.iata === team_track[i + 1]; });
-            lineData.push([sourceVenue, targetVenue]);
+            // generate an array of coordinates for each line segment in the track array
+            var lineData = [];
+            for (var i = -3; i < team_track.length-1  ; i++) {
+              var sourceVenue = venues.find(function(d) { return d.iata === team_track[i]; });
+              var targetVenue = venues.find(function(d) { return d.iata === team_track[i + 1]; });
+              lineData.push([sourceVenue, targetVenue]);
+            }
+
+            d3.selectAll('.removable-line').remove();
+            svg.selectAll("path")
+              .data(lineData)
+              .enter()
+              .append("path")
+              .attr("class", "removable-line")
+              .attr("d", function(d) { return lineGenerator(d); })
+              .attr("stroke", color)
+              .attr("stroke-width", 2)
+              .attr("marker-end", "url(#triangle)")
+              .attr("fill", color);
+
+            // svg.selectAll('.removable-line').remove();
+            svg.append("svg:defs").append("svg:marker")
+              .attr("class", "removable-line")
+              .attr("id", "triangle")
+              .attr("refX", 6)
+              .attr("refY", 6)
+              .attr("markerWidth", 15)
+              .attr("markerHeight", 15)
+              .attr("orient", "auto-start-reverse")
+              .append("path")
+              .attr("d", "M 0 0 12 6 0 12 3 6")
+              .style("fill", color)
           }
-
-          d3.selectAll('.removable-line').remove();
-          svg.selectAll("path")
-            .data(lineData)
-            .enter()
-            .append("path")
-            .attr("class", "removable-line")
-            .attr("d", function(d) { return lineGenerator(d); })
-            .attr("stroke", color)
-            .attr("stroke-width", 2)
-            .attr("marker-end", "url(#triangle)")
-            .attr("fill", color);
-
-          // svg.selectAll('.removable-line').remove();
-          svg.append("svg:defs").append("svg:marker")
-            .attr("class", "removable-line")
-            .attr("id", "triangle")
-            .attr("refX", 6)
-            .attr("refY", 6)
-            .attr("markerWidth", 15)
-            .attr("markerHeight", 15)
-            .attr("orient", "auto-start-reverse")
-            .append("path")
-            .attr("d", "M 0 0 12 6 0 12 3 6")
-            .style("fill", color)
         }
 
         d3.csv("venues.csv",function(data) {
@@ -347,7 +401,7 @@
             .text(function (d) {return d.city;})
             .on("mouseover", function (d, i) {
               d3.select("#ipl_title").text("")
-                .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
+                // .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
                 .append("p").text(d.name).style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
               teamDraw(team_track[d], myColor(d), venues);
               const team_name = teams[d];
@@ -365,8 +419,8 @@
             .attr("text-anchor", "start").style("font-size", "15px").style('font-family','Calibri').style('fill', 'black')
             .text(function (d) {return d.city;})
             .on("mouseover", function (d, i) {
-              d3.select("#ipl_title").text("")
-                .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
+              // d3.select("#ipl_title").text("")
+              //   .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family', 'Calibri').style('fill', 'black')
               teamDraw(team_track[d], myColor(d), venues);
               const team_name = teams[d];
               team_schedule(team_name);
@@ -380,30 +434,30 @@
                               .enter().append("g");
     
           legend_color.append("circle")
-              .attr("cy", function (d) { return - 25*(-10-d)+180;  })
-              .attr("cx", function(d) {return 390;})
+              .attr("cy", function (d) { return - 25*(-10-d)+210;  })
+              .attr("cx", function(d) {return 300;})
               .attr("r", function (d) { return 10; })
               .attr("fill", function (d) {return myColor(d); })
               .attr('opacity', opacityCircle);
     
           legend_color.append("rect")
-              .attr("y", function (d) { return - 25*(-10-d)+180; })
-              .attr("x", function (d) {return 400;})
+              .attr("y", function (d) { return - 25*(-10-d)+200; })
+              .attr("x", function (d) {return 320;})
               .attr("width", 250)
-              .attr("height", 20)
+              .attr("height", 30)
               .attr("fill", "white");
     
             
           legend_color.append("text")
-              .attr("y", function (d) { return - 25*(-10-d)+184; })
-              .attr("x", function (d) {return 410;})
+              .attr("y", function (d) { return - 25*(-10-d)+216; })
+              .attr("x", function (d) {return 320;})
               .attr("text-anchor", "start").style("font-size", "18px").style('font-family','Calibri')
               .text(function (d) {return teams[d];})
               .on("mouseover", function(d, i) 
               {
     
                 d3.select("#ipl_title").text("")
-                  .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family','Calibri').style('fill', 'black')
+                  // .append("p").text("IPL 2023 Team Paths").style("font-size", "20px").style('font-family','Calibri').style('fill', 'black')
                   .append("p").text(teams[d]).style("font-size", "20px").style('font-family','Calibri').style('fill', 'black')
                 teamDraw(team_track[d], myColor(d), venues);
                 const team_name = teams[d];
@@ -411,7 +465,7 @@
               });
 
               function team_schedule(team_name) {
-    
+                if (team_name) {  
                   // filter out rows that match the selected team
                   const filtered_schedule = teamSchedule.filter(function(row) {
                     if ((String(row[4]).toLowerCase() === team_name.toLowerCase()) ||(String(row[5]).toLowerCase() === team_name.toLowerCase()))
@@ -424,6 +478,7 @@
                   const table = $('#scheduleDataTable').DataTable();
                   table.clear().draw();
                   table.rows.add(filtered_schedule).draw();
+                }
               }
         });
       });
