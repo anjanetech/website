@@ -1,0 +1,889 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+   
+      <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia&effect=fire">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_orange-amber.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia&effect=neon|outline|emboss|shadow-multiple">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=fire-animation|3d-float">
+<link rel="stylesheet" href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100..700&display=swap'>
+
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+<style type="text/css">
+
+
+body {
+background-color: #ffffff; 
+}
+
+
+
+h1:hover {
+  font-variation-settings: "wght" 582; 
+  letter-spacing: 1px;
+}
+
+
+@media only screen and (min-width: 1000px) and (max-width:1399px){
+.forty {
+    height: 30vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    bottom: -200px;
+    
+}
+        
+.darbg {
+    background-color: #000000;
+    color: white;
+    
+}
+
+        .topnavpng {
+    width: 12%;
+    position:absolute;
+    left:43%
+}
+
+
+  h1 {
+    font-size: 120px;
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -3px;
+    transition: 700ms ease;
+    font-variation-settings: "wght" 311;
+    margin-bottom: 0.8rem;
+    color: rgb(0, 0, 0);
+    text-align:center;
+    font-size: 50px;
+    font-weight:1000;
+    /* margin-bottom:- 500px; */
+    margin-top: 50px;
+    /* position:absolute; top:15%; */
+  }
+
+  h7 {
+    /* position:absolute; top:27%; left:33%; */
+    color:rgb(0, 0, 0); 
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight:1000;
+    text-align:center;
+    margin-top: 20px;
+  }
+  h8 {
+    /* position:absolute; top:27%; left:33%; */
+    color:rgb(0, 0, 0); 
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight:1000;
+    text-align:center;
+    margin-top: 30px;
+  }
+  #map {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* overflow-x: scroll; */
+    float: left;
+    left:-80px;
+    margin-top: -100px;
+    /* margin-bottom: 600px; */
+    
+    /* align-items: left; */
+  }
+
+  #schedule {
+    width: 40%;
+    height: 90vh;
+    /* margin-right: 20px; */
+    margin-top: 70px;
+    min-width: 930px;
+    overflow-x: auto;
+    position: relative;
+    /* top: 80%; */
+    float: right;
+    right:-400px;
+  }
+
+  #ipl_title{ 
+    position:absolute; 
+    top:35%; left:30%; 
+    width:150%;
+    font-family: Arial; 
+    font-size:1000px; 
+    font-weight:1000; 
+    color:rgb(0, 0, 0);   
+    font-style: italic;   
+  
+  }
+
+    .legend text {   
+    font-weight: 800; 
+    fill:rgb(0, 0, 0);
+    font-size: 18px;
+    text-transform: uppercase;
+    font-family: Poppins, serif;
+    letter-spacing: -1px;
+    transition: 700ms ease;
+    font-variation-settings: "wght" 311;
+    margin-bottom: 0.8rem;
+  }
+
+  .legend text:hover {
+  font-variation-settings: "wght" 582; 
+  letter-spacing: 1px;
+  text-shadow: 3px 3px 3px #48ff00;
+}
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1600px) {
+.forty {
+    height: 30vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    
+}
+        
+.darbg {
+    background-color: #000000;
+    color: white;
+    
+}
+
+.topnavpng {
+    width: 12%;
+    position:absolute;
+    left:43%
+}
+
+
+h1 {
+  font-size: 120px;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -3px;
+  transition: 700ms ease;
+  font-variation-settings: "wght" 311;
+  margin-bottom: 0.8rem;
+  color: rgb(0, 0, 0);
+  text-align:center;
+  font-size: 50px;
+  font-weight:1000;
+  /* margin-bottom:- 500px; */
+  margin-top: 50px;
+  /* position:absolute; top:15%; */
+}
+
+h7 {
+  /* position:absolute; top:27%; left:33%; */
+  color:rgb(0, 0, 0); 
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight:1000;
+  text-align:center;
+  margin-top: 20px;
+}
+
+h8 {
+  /* position:absolute; top:27%; left:33%; */
+  color:rgb(0, 0, 0); 
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight:1000;
+  text-align:center;
+  margin-top: 30px;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  /* overflow-x: scroll; */
+  float: left;
+  left:-80px;
+  margin-top: -100px;
+  
+  /* align-items: left; */
+}
+
+#schedule {
+  width: 40%;
+  height: 90vh;
+  /* margin-right: 20px; */
+  margin-top: 70px;
+  min-width: 930px;
+  overflow-x: auto;
+  position: relative;
+  /* top: 80%; */
+  float: right;
+  right:-200px;
+}
+
+#ipl_title{ 
+  position:absolute; 
+  top:35%; left:30%; 
+  width:150%;
+  font-family: Arial; 
+  font-size:1000px; 
+  font-weight:1000; 
+  color:rgb(0, 0, 0);   
+  font-style: italic;   
+
+}
+
+  .legend text {   
+  font-weight: 800; 
+  fill:rgb(0, 0, 0);
+  font-size: 18px;
+  text-transform: uppercase;
+  font-family: Poppins, serif;
+  letter-spacing: -1px;
+  transition: 700ms ease;
+  font-variation-settings: "wght" 311;
+  margin-bottom: 0.8rem;
+}
+
+.legend text:hover {
+font-variation-settings: "wght" 582; 
+letter-spacing: 1px;
+text-shadow: 3px 3px 3px #48ff00;
+}
+}
+
+             /* my pc is around 1770*/
+@media only screen and (min-width: 1601px) {
+.forty {
+    height: 30vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    
+}
+        
+.darbg {
+    background-color: #000000;
+    color: white;
+    
+}
+
+        .topnavpng {
+    width: 12%;
+    position:absolute;
+    left:43%
+}
+
+
+h1 {
+  font-size: 120px;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -3px;
+  transition: 700ms ease;
+  font-variation-settings: "wght" 311;
+  margin-bottom: 0.8rem;
+  color: rgb(0, 0, 0);
+  text-align:center;
+  font-size: 50px;
+  font-weight:1000;
+  /* margin-bottom:- 500px; */
+  margin-top: 50px;
+  /* position:absolute; top:15%; */
+}
+
+h7 {
+  /* position:absolute; top:27%; left:33%; */
+  color:rgb(0, 0, 0); 
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight:1000;
+  text-align:center;
+  margin-top: 20px;
+}
+h8 {
+  /* position:absolute; top:27%; left:33%; */
+  color:rgb(0, 0, 0); 
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight:1000;
+  text-align:center;
+  margin-top: 30px;
+}
+
+#map {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  /* overflow-x: scroll; */
+  float: left;
+  left:0px;
+  margin-top: -100px;
+  
+  /* align-items: left; */
+}
+
+#schedule {
+  width: 40%;
+  height: 90vh;
+  /* margin-right: 20px; */
+  margin-top: 70px;
+  min-width: 930px;
+  /* overflow-x: auto; */
+  position: relative;
+  /* top: 80%; */
+  float: right;
+  right:30px;
+}
+
+#ipl_title{ 
+  position:absolute; 
+  top:35%; left:30%; 
+  width:150%;
+  font-family: Arial; 
+  font-size:1000px; 
+  font-weight:1000; 
+  color:rgb(0, 0, 0);   
+  font-style: italic;   
+
+}
+
+  .legend text {   
+  font-weight: 800; 
+  fill:rgb(0, 0, 0);
+  font-size: 18px;
+  text-transform: uppercase;
+  font-family: Poppins, serif;
+  letter-spacing: -1px;
+  transition: 700ms ease;
+  font-variation-settings: "wght" 311;
+  margin-bottom: 0.8rem;
+}
+
+.legend text:hover {
+font-variation-settings: "wght" 582; 
+letter-spacing: 1px;
+text-shadow: 3px 3px 3px #48ff00;
+}
+}
+
+
+  
+@media only screen and (max-width: 600px) {
+
+.forty {
+    height: 20vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+        
+.darbg {
+    background-color: #1b1b1b;
+    color: rgb(255, 255, 255);
+    width:230%;
+    
+    
+}
+
+.topnavpng {
+    width:50%;
+    position:absolute;
+    top: 5%;
+    left:85%;
+    
+}
+  h1 {
+      text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -3px;
+    transition: 700ms ease;
+    font-variation-settings: "wght" 311;
+    margin-bottom: 0.8rem;
+    color: rgb(0, 0, 0);
+    text-align:center;         
+    width:200%;
+    position:absolute;
+    top:10%;
+    left:20%;   
+    /* font-family: Arial; */
+    font-size: 45px;
+    font-weight:1000;
+  }
+
+  h7 {
+    position:absolute; top:23%; left:20%;
+    width: 200%;
+    color:rgb(0, 0, 0);
+    font-family:'Poppins', sans-serif;
+    font-size: 25px;
+    line-height:1;
+    font-weight:1000;
+    text-align: center;
+    margin-top: 0px;
+  }
+  h8 {
+    position:absolute; top:33%; left:20%;
+    width: 200%;
+    color:rgb(0, 0, 0);
+    font-family:'Poppins', sans-serif;
+    font-size: 25px;
+    line-height:1;
+    font-weight:1000;
+    text-align: center;
+    margin-top: -20px;
+  }
+
+  #mainContent {
+    /* margin-top: -200px; */
+    /* position:relative;  left:50%; */
+    justify-content: center;
+    width: 200%;
+  }
+  
+  /* Add margin and padding to the mainContent div */
+  #mainContent {
+    margin: 70px;
+    margin-top: 220px;
+    padding: 0px;
+  }
+  
+  
+ 
+  #ipl_title{ 
+    position:absolute; 
+    top:30%; left:100%; 
+    width:150%;
+    font-family: Poppins, serif; 
+    font-size:18px; 
+    font-weight:1000; 
+    color:rgb(0, 0, 0);   
+    font-style: italic; 
+  }
+
+  .legend text {      
+    font-weight: 800; 
+    fill:rgb(0, 0, 0);
+    font-size: 18px;
+    text-transform: uppercase;
+    font-family: Poppins, serif;
+    letter-spacing: -1px;
+    transition: 700ms ease;
+    font-variation-settings: "wght" 311;
+    margin-bottom: 0.8rem;
+  }
+
+  .legend text:hover {
+  font-variation-settings: "wght" 582; 
+  letter-spacing: 1px;
+  text-shadow: 3px 3px 3px #48ff00;
+}
+}
+/* #most_6s {
+  position: relative
+  ;
+  top: 100px;
+  left: 200px;
+}
+#most_4s {
+  position: relative
+  float:right;
+  top: 100px;
+  left: 200px;
+} */
+
+.container_1 {
+  display: flex;
+}
+
+
+#most_6s {
+  flex: 1;
+}
+
+#most_4s {
+  flex: 1;
+}
+#most_runs {
+  flex: 1;
+}
+
+#HS {
+  flex: 1;
+}
+#NO {
+  flex: 1;
+}
+#_50s {
+  flex: 1;
+}
+#_100s {
+  flex: 1;
+}
+#bat_sr {
+  flex: 1;
+}
+#duck {
+  flex: 1;
+}
+#partnership {
+  flex: 1;
+}
+#most_wickets {
+  flex: 1;
+}
+#most_maidens {
+  flex: 1;
+}
+#ER {
+  flex: 1;
+}
+#bowl_sr {
+  flex: 1;
+}
+#_4w {
+  flex: 1;
+}
+#_5w {
+  flex: 1;
+}
+#RC {
+  flex: 1;
+}
+#RCW {
+  flex: 1;
+}
+#catches {
+  flex: 1;
+}
+#wkt_perc {
+  flex: 1;
+}
+
+#team_points {
+  flex: 1;
+}
+#team_win_on_game_time {
+  flex: 1;
+}
+#toss_winner_choice {
+  flex: 1;
+}
+#mom {
+  flex: 1;
+}        
+#team_max_score {
+  flex: 1;
+}
+#team_wicket_capabilities {
+  flex: 1;
+}
+
+
+
+
+
+
+</style>
+<title>anjane - IPL 2023 Schedule </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+  
+  <body>
+    <div id="header">
+      <div class="topnav" style="margin-bottom: 10px;margin-top: 10px;">
+        <a href="/" class="mobcen">
+          <img src="/topnav.png" alt="" class="topnavpng">
+        </a>
+      </div>
+      <br>
+      <div style="width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <h1>Indian Premier League - 2023</h1>
+        <h7>Tap/Hover over plots to see the stats for each player</h7>
+        <h8>Pinch/Box select to zoom in and out plots </h8>
+        <h9>Use the plotly toolbar to pan,zoom out and  </h9>
+      </div>
+      <br>
+      <br>
+
+     
+
+      <div id="mainContent">
+        
+        <div class="container_1">
+          <div id="most_6s">Left Div</div>
+          <div id="most_4s">Right Div</div>
+        </div>
+        <!-- <div id="most_6s"></div>
+        <div id="most_4s"></div> -->
+        <div class="container_1">
+          <div id="most_runs">Left Div</div>
+          <div id="HS">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="_50s">Left Div</div>
+          <div id="_100s">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="bat_sr">Left Div</div>
+          <div id="duck">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="NO">Left Div</div>
+          <div id="partnership">Right Div</div>
+        </div>
+
+        <!-- <div id="most_runs"></div> -->
+        <!-- <div id="50s"></div>
+        <div id="100s"></div> -->
+        <!-- <div id="HS"></div> -->
+        <!-- <div id="bat_sr"></div>
+        <div id="duck"></div> -->
+        <!-- <div id="NO"></div>
+        <div id="partnership"></div> -->
+        
+
+        <div id="EB"></div>
+
+        <!-- <div id="Total_runs_vs_SR"></div> -->
+
+        <div class="container_1">
+          <div id="most_wickets">Left Div</div>
+          <div id="most_maidens">Right Div</div>
+        </div>
+        <div class="container_1">
+          <div id="ER">Left Div</div>
+          <div id="bowl_sr">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="_4w">Left Div</div>
+          <div id="_5w">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="RC">Left Div</div>
+          <div id="RCW">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="catches">Left Div</div>
+          <div id="wkt_perc">Right Div</div>
+        </div>
+
+        <!-- <div id="most_wickets"></div>
+        <div id="ER"></div> -->
+        <!-- <div id="bowl_sr"></div> -->
+        <!-- <div id="4w"></div>
+        <div id="5w"></div> -->
+        <!-- <div id="RC"></div>
+        <div id="RCW"></div> -->
+        <!-- <div id="most_maidens"></div> -->
+        
+        <!-- <div id="catches"></div>
+
+        <div id="wkt_perc"></div> -->
+
+        <!-- <div id="team_most_4s"></div>
+        <div id="team_most_6s"></div> -->
+        <div class="container_1">
+          <div id="team_win_on_game_time">Left Div</div>
+          <div id="toss_winner_choice">Right Div</div>
+        </div>
+
+        <div class="container_1">
+          <div id="team_points">Left Div</div>
+          <div id="mom">Right Div</div>
+        </div>
+
+        <!-- <div id="team_points"></div> -->
+        <div id="team_max_score"></div>
+        <div id="team_wicket_capabilities"></div>
+        <!-- <div id="team_win_on_game_time"></div> -->
+
+
+        <!-- <div id="team_points"></div>
+
+        <div id="mom"></div> -->
+        <!-- <div id="toss_winner_choice"></div> -->
+        <!-- <div id="image-container"></div> -->
+
+        <!-- $("#Team Wicket Out Method").load("Team Wicket Out Method.html"); -->
+        
+
+      </div>
+    </div>
+    <div id="footer" class="darbg forty" style="height: 10vh !important;">
+      <div class="bottomnav">
+        <a href="/"><img src="/bottomnav.png" alt=""class="bottomnavpng"></a>
+      </div>
+      Copyright 2023
+    </div>
+    </div>
+  </body>
+  
+  
+  
+  <script type="text/javascript">
+      $(function () {
+        $("#most_6s").load("most_6s.html");
+        $("#most_4s").load("most_4s.html");
+        $("#most_runs").load("most_runs.html");
+        $("#_50s").load("_50s.html");
+        $("#_100s").load("_100s.html");
+        $("#HS").load("HS.html");
+        $("#bat_sr").load("bat_sr.html");
+        $("#Total_runs_vs_SR").load("Total_runs_vs_SR.html");
+        $("#most_wickets").load("most_wickets.html");
+        $("#ER").load("ER.html");
+        $("#most_maidens").load("most_maidens.html");
+        $("#bowl_sr").load("bowl_sr.html");
+        $("#_4w").load("_4w.html");
+        $("#_5w").load("_5w.html");
+        $("#RC").load("RC.html");
+        $("#bowl_sr").load("bowl_sr.html");
+        $("#RC").load("RC.html");
+        $("#RCW").load("RCW.html");
+        $("#NO").load("NO.html");
+        $("#EB").load("EB.html");
+        $("#catches").load("catches.html")
+        $("#toss_winner_choice").load("toss_winner_choice.html");
+        // $("#team_most_4s").load("team_most_4s.html");
+        // $("#team_most_6s").load("team_most_6s.html");
+        $("#team_wicket_capabilities").load("team_wicket_capabilities.html");
+        $("#team_points").load("team_points.html");
+        $("#team_win_on_game_time").load("team_win_on_game_time.html");
+        $("#mom").load("mom.html");
+        $("#toss_winner_choice").load("toss_winner_choice.html");
+        $("#duck").load("duck.html");
+        $("#partnership").load("partnership.html");
+        $("#team_max_score").load("team_max_score.html");
+        $("#wkt_perc").load("wkt_perc.html");
+
+    //     window.addEventListener('beforeunload', function() {
+    //   // Store the current scroll position in session storage
+    //   sessionStorage.setItem('scrollPosition', window.pageYOffset);
+    // });
+  
+    // window.addEventListener('load', function() {
+    //   // Retrieve the stored scroll position from session storage
+    //   var scrollPosition = sessionStorage.getItem('scrollPosition');
+  
+    //   // Set the scroll position if it exists
+    //   if (scrollPosition) {
+    //     window.scrollTo(0, parseInt(scrollPosition));
+    //   }
+    // });
+
+
+
+
+        // Load the CSV file using d3.csv() method
+// d3.csv("4w.csv", function(data) {
+
+// // Create an array to store the image URLs
+// var images = [];
+
+// // Loop through the data and push the image URLs to the array
+// for (var i = 0; i < data.length; i++) {
+//   images.push(data[i].image_url);
+// }
+// console.log(images)
+// // Create a div element to contain the images
+// var container = document.createElement("div");
+// container.setAttribute("id", "image-container");
+// document.body.appendChild(container);
+
+// console.log(container)
+// // Loop through the image URLs and create image elements
+// for (var j = 0; j < images.length; j++) {
+//   var image = document.createElement("img");
+//   image.src = images[j];
+//   container.appendChild(image);
+// }
+
+// console.log(image)
+// });
+
+// fetch the CSV file
+// fetch('4w.csv')
+//   .then(response => response.text())
+//   .then(csvText => {
+//     // parse the CSV data
+//     const csvData = Papa.parse(csvText, { header: true }).data;
+
+//     // iterate over the rows and display the images
+//     csvData.forEach(row => {
+//       const bowler = row.bowler;
+//       const imageUrl = row.image_url;
+
+//       // create an img element and set its attributes
+//       const img = document.createElement('img');
+//       img.setAttribute('src', imageUrl);
+//       img.setAttribute('alt', bowler);
+//       img.setAttribute('title', bowler);
+
+//       // add the img element to the page
+//       const container = document.getElementById('image-container');
+//       container.appendChild(img);
+//     });
+//   });
+
+// Load the CSV file
+// d3.csv('4w.csv', function(data) {
+
+// // Create an array of image URLs
+// var images = data.map(function(d) {
+//   return d.image_url;
+// });
+
+// // Create an array of image elements
+// var imageElements = images.map(function(url) {
+//   var img = document.createElement('img');
+//   img.src = url;
+//   return img;
+// });
+
+// // Add the image elements to the HTML document
+// imageElements.forEach(function(img) {
+//   document.body.appendChild(img);
+// });
+// });
+
+
+
+
+
+      });
+
+
+        
+    </script>
+</html>
